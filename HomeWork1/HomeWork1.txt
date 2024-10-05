@@ -1,0 +1,98 @@
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ apt search docker-compose
+Сортировка… Готово
+Полнотекстовый поиск… Готово
+docker-compose/xenial-updates 1.8.0-2~16.04.1 all
+  Punctual, lightweight development environments using Docker
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ sudo apt install docker-compose
+Чтение списков пакетов… Готово
+Построение дерева зависимостей
+Чтение информации о состоянии… Готово
+Будут установлены следующие дополнительные пакеты:
+  libpython-stdlib libpython2.7-minimal libpython2.7-stdlib python python-backports.ssl-match-hostname
+  python-cached-property python-cffi-backend python-chardet python-cryptography python-docker python-dockerpty
+  python-docopt python-enum34 python-funcsigs python-functools32 python-idna python-ipaddress python-jsonschema
+  python-minimal python-mock python-ndg-httpsclient python-openssl python-pbr python-pkg-resources python-pyasn1
+  python-requests python-six python-texttable python-urllib3 python-websocket python-yaml python2.7 python2.7-minimal
+Предлагаемые пакеты:
+  python-doc python-tk python-cryptography-doc python-cryptography-vectors python-enum34-doc python-funcsigs-doc
+  python-mock-doc python-openssl-doc python-openssl-dbg python-setuptools doc-base python-ntlm python2.7-doc
+  binfmt-support
+Следующие НОВЫЕ пакеты будут установлены:
+  docker-compose libpython-stdlib libpython2.7-minimal libpython2.7-stdlib python python-backports.ssl-match-hostname
+  python-cached-property python-cffi-backend python-chardet python-cryptography python-docker python-dockerpty
+  python-docopt python-enum34 python-funcsigs python-functools32 python-idna python-ipaddress python-jsonschema
+  python-minimal python-mock python-ndg-httpsclient python-openssl python-pbr python-pkg-resources python-pyasn1
+  python-requests python-six python-texttable python-urllib3 python-websocket python-yaml python2.7 python2.7-minimal
+Обновлено 0 пакетов, установлено 34 новых пакетов, для удаления отмечено 0 пакетов, и 0 пакетов не обновлено.
+Необходимо скачать 5 339 kB архивов.
+После данной операции объём занятого дискового пространства возрастёт на 24,0 MB.
+Настраивается пакет docker-compose (1.8.0-2~16.04.1) …
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ docker-compose up -d
+Creating network "phpfpm_app-network" with driver "bridge"
+Building nginx
+Step 1/6 : FROM nginx:latest
+Step 2/6 : COPY ./hosts/mysite.local.conf /etc/nginx/conf.d/mysite.local.conf
+Step 3/6 : WORKDIR /data
+Step 4/6 : VOLUME /data
+Step 5/6 : EXPOSE 80
+Step 6/6 : CMD ["nginx", "-g", "daemon off;"]
+Successfully tagged myapp/nginx:latest
+WARNING: Image for service nginx was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+
+Building app
+Step 1/5 : FROM php:8.2-fpm
+Step 2/5 : COPY ./php.ini /usr/local/etc/php/conf.d/php-custom.ini
+Step 3/5 : WORKDIR /data
+Step 4/5 : VOLUME /data
+Step 5/5 : CMD ["php-fpm"]
+Successfully tagged myapp/php:latest
+WARNING: Image for service app was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating webserver
+Creating app
+
+ERROR: for nginx  Cannot start service nginx: driver failed programming external connectivity on endpoint webserver (1dca84a352f45b65dd636e234999ab20a03d12e1c28ec37bfddf330ab6f8fecb): Error starting userland proxy: listen tcp 0.0.0.0:80: bind: address already in use
+ERROR: Encountered errors while bringing up the project.
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ sudo systemctl stop nginx
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ sudo systemctl status nginx
+? nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: inactive (dead) since Пт 2024-10-04 00:12:26 +03; 8s ago
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ docker-compose up -d
+app is up-to-date
+Starting webserver
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ docker-compose ps
+  Name                 Command               State         Ports
+-----------------------------------------------------------------------
+app         docker-php-entrypoint php-fpm    Up      9000/tcp
+webserver   /docker-entrypoint.sh ngin ...   Up      0.0.0.0:80->80/tcp
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ docker-compose down
+Stopping app ... done
+Stopping webserver ... done
+Removing app ... done
+Removing webserver ... done
+Removing network phpfpm_app-network
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/php-fpm$ docker-compose ps
+Name   Command   State   Ports
+------------------------------
+
+max@LinuxServer:~/PHP_Lessons/Lesson01$ cd ./sample/
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/sample$ docker-compose up -d
+Creating network "sample_app-network" with driver "bridge"
+Creating app
+Creating webserver
+
+max@LinuxServer:~/PHP_Lessons/Lesson01/sample$ docker-compose ps
+  Name                 Command               State         Ports
+-----------------------------------------------------------------------
+app         docker-php-entrypoint php-fpm    Up      9000/tcp
+webserver   /docker-entrypoint.sh ngin ...   Up      0.0.0.0:80->80/tcp
