@@ -15,8 +15,10 @@ $russia = array(
 
 foreach ($russia as $key => $value) {
     echo ($key.": ");
-    foreach ($value as $item) {
-        echo ($item.", ");
+    // foreach ($value as $item) {
+    //     echo ($item.", ");
+    // }
+    for ($i=0; $i < count($value); $i++) { 
+        ($i < count($value) - 1) ? print($value[$i].", ") : print($value[$i]."\n");
     }
-    echo chr(8).chr(8)." "; //backspace!!!
 }
