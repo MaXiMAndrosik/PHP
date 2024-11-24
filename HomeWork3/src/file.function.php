@@ -143,16 +143,16 @@ function delFunction(array $config): string {
 
 function readBirthday(array $config): string {
     $address = $config['storage']['address'];
-    // $today = date('d-m-Y');
-    $today = date('30-07-2022');
-    $todayArray = mb_split('-', $today);
+    $today = date('d-m-Y');
+    // $today = date('30-07-2022');
+    $todayArray = explode('-', $today);
     $result = '';
 
     if (file_exists($address) && is_readable($address)) {
         $file = file($address);
         for ($i = 0; $i < sizeof($file); $i++) {
-            $buffer = mb_split(', ', $file[$i]);
-            $bufferArray = mb_split('-', $buffer[1]);
+            $buffer = explode(', ', $file[$i]);
+            $bufferArray = explode('-', $buffer[1]);
             if ($bufferArray[1] == $todayArray[1] && $bufferArray[0] == $todayArray[0]) {
                 $result .= "\033[95m"."Сегодня отмечает день рождение: \r\n";
                 $result .= $buffer[0].' '.$buffer[1]."\r\n\033[97m";
@@ -162,8 +162,8 @@ function readBirthday(array $config): string {
             return $result;
         }
         for ($i = 0; $i < sizeof($file); $i++) {
-            $buffer = mb_split(', ', $file[$i]);
-            $bufferArray = mb_split('-', $buffer[1]);
+            $buffer = explode(', ', $file[$i]);
+            $bufferArray = explode('-', $buffer[1]);
             if ($bufferArray[1] == $todayArray[1] && $bufferArray[0] > $todayArray[0]) {
                 $result .= "Скоро отмечает день рождение: \r\n";
                 $result .= $buffer[0].' '.$buffer[1]."\r\n";
