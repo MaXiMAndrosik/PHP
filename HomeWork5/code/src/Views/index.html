@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="./src/Views/style/style.css">
+</head>
+
+<body class="max_conteiner">
+
+    {% include './layers/header.twig' %}
+
+    <main class="main-content conteiner">
+        {% if message is not empty %}
+        <h3 class="main-content__content">{{message}}</h3>
+        {% endif %}
+
+        {% include content_template_name %}
+    </main>
+
+    <div class="time">
+        Текущее время {{ time }}
+    </div>
+
+    {% include './layers/footer.twig' %}
+
+    {% if alert is not empty %}
+    <script>
+        alert('{{ alert }}');
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
