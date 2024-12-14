@@ -17,6 +17,10 @@ a {
     padding-right: calc(50% - 800px);
 }
 
+/*======================
+    header page
+=======================*/
+
 .header {
     background: #303B44;
     min-height: 60px;
@@ -55,6 +59,10 @@ a {
     letter-spacing: 1px;
 }
 
+/*======================
+    index page
+=======================*/
+
 .main-content__content {
     padding: 30px 20px;
     text-align: justify;
@@ -64,6 +72,10 @@ a {
     font-weight: 400;
 }
 
+/*======================
+    users page
+=======================*/
+
 .user__items {
     display: flex;
     flex-direction: column;
@@ -72,6 +84,35 @@ a {
     padding-bottom: 30px;
 }
 
+.input-form__label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+}
+
+.input-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
+.input-form__btn {
+    background: #303B44;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+
+    button:hover {
+        transition: color 0.3s ease;
+        color: rgb(230, 129, 129);
+    }
+}
+
+/*======================
+    footer page
+=======================*/
 .footer {
     display: flex;
     align-items: center;
@@ -88,11 +129,9 @@ a {
     gap: 20px;
 }
 
-
 /*======================
     404 page
 =======================*/
-
 
 .page_404 {
     padding: 40px 0;

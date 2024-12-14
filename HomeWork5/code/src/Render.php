@@ -16,7 +16,7 @@ class Render {
 
         $this->loader = new FilesystemLoader(dirname(__DIR__) . $this->viewFolder);
         $this->environment = new Environment($this->loader, [
-           'cache' => $_SERVER['DOCUMENT_ROOT'].'/cache/',
+        //    'cache' => $_SERVER['DOCUMENT_ROOT'].'/cache/',
         ]);
     }
 

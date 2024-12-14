@@ -25,7 +25,16 @@ class UserController
         if (User::addUserToStorage()) {
             header('Location: /user');
         } else {
-            header('Location: /user/adduser');
+            $render = new Render();
+
+            return $render->renderPage(
+                'user-add.twig',
+                [
+                    'title' => 'Добавление пользователя',
+                    'message' => 'Повторите ввод данных пользователя',
+                    'alert' => 'Некорректный ввод данных. Пользователь не добавлен'
+                ]
+            );
         }
     }
 
