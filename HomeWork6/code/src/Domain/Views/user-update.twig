@@ -1,0 +1,41 @@
+<ul class="user__items">
+    {% for user in users %}
+    <li><a href="#" id="{{ user.getUserId() }}" name="{{ user.getUserName() }}" lastname = "{{ user.getUserLastName() }}">{{ user.getUserName() }}. {{ user.getUserLastName() }}. День рождения:
+            {{ user.getUserBirthday() | date('d.m.Y') }}</a></li>
+    {% else %}
+    <li><em>Список пуст</em></li>
+    {% endfor %}
+</ul>
+
+<script>
+    const ulElement = document.querySelector('.user__items');
+    console.log(ulElement);
+
+    const items = document.querySelectorAll('[id]');
+    console.log(items);
+    items.forEach(element => {
+        element.addEventListener('click', function () {
+            console.log(element);
+            ulElement.insertAdjacentHTML('afterend', `
+            <form class="input-form" action="update/">
+                <input class="input-form__input id invisible" type="text" name="id" required>
+
+                <label class="input-form__label" for="name">Уточните имя пользователя: </label>
+                <input class="input-form__input name" type="text" name="name" required>
+    
+                <label class="input-form__label" for="lastname">Уточните фамилию пользователя: </label>
+                <input class="input-form__input lastname" type="text" name="lastname" required>
+
+                <button class="input-form__btn"type="submit">Обновить</button>
+            </form>`);
+            document.querySelector('.id').value = element.getAttribute('id');
+            document.querySelector('.name').value = element.getAttribute('name');
+            document.querySelector('.lastname').value = element.getAttribute('lastname');
+        });
+    }
+    );
+
+</script>
+
+
+{# /user/update/?id=42&name=Петр #}

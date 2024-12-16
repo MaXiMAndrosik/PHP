@@ -1,0 +1,9 @@
+<ul class="user__items">
+    {% for user in users %}
+        <li><a href="/user/delete/?id={{ user.getUserId() }}">{{ user.getUserName() }}. {{ user.getUserLastName() }}. День рождения: {{ user.getUserBirthday() | date('d.m.Y') }}</a></li>
+    {% else %}
+        <li><em>Список пуст</em></li>
+    {% endfor %}
+</ul>
+
+{# /user/delete/?id=42 #}
