@@ -1,0 +1,90 @@
+{% if user_authorized and access_granted %}
+<div class="bd-example-snippet bd-code-snippet">
+    <div class="bd-example m-0 border-0">
+        {% if user %}
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Фамилия</th>
+                    <th scope="col">Дата рождения</th>
+                    <th scope="col">Ваш выбор</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for userID in user %}
+                <tr>
+                    <th scope="row">{{ userID.getUserId() }}</th>
+                    <td>{{ userID.getUserName() }}</td>
+                    <td>{{ userID.getUserLastName() }}</td>
+                    <td>{{ userID.getUserBirthday() | date('d.m.Y') }}</td>
+                    <td>
+                        <form action="/user/updateuserform" method="post">
+                            <input type="hidden" name="id" value="{{ userID.getUserId() }}">
+                            <button class="btn btn-light btn-sm" type="submit">Редактировать</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="list-group container">
+            <p class="list-group-item list-group-item-action list-group-item-danger">
+                <em>Список пуст</em>
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% elseif user_authorized %}
+<div class="bd-example-snippet bd-code-snippet">
+    <div class="bd-example m-0 border-0">
+
+        <form class="row g-3" action="/user/update" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="id" value="{{ user.getUserId() }}">
+
+            <div class="col-md-4">
+                <label for="name" class="form-label">First name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="имя пользователя"
+                    value="{{ user.getUserName() }}" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please provide a valid name.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="lastname" class="form-label">Last name</label>
+                <input type="text" class="form-control" id="lastname" name="lastname" placeholder="фамилия пользователя"
+                    value="{{ user.getUserLastName() }}" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please provide a valid lastname.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="birthday" class="form-label">Birthday</label>
+                <input type="text" class="form-control" id="birthday" name="birthday" placeholder="дд-мм-гггг"
+                    pattern="^\d{2}-\d{2}-\d{4}$" value="{{ user.getUserBirthday() | date('d-m-Y') }}" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please provide a valid birthday.</div>
+            </div>
+
+            <div class="col-2 my-3">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        </form>
+
+        {# <div class="col-2 my-3">
+            <form action="/user/delete" method="post">
+                <input type="hidden" name="id" value="{{ user.getUserId() }}">
+                <button class="btn btn-primary" type="submit"> Удалить </button>
+            </form>
+        </div> #}
+
+    </div>
+</div>
+{% endif %}
+
+{# /user/update/?id=42&name=Петр #}

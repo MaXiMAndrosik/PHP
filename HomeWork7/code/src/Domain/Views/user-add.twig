@@ -1,0 +1,85 @@
+<div class="bd-example-snippet bd-code-snippet">
+        <div class="bd-example m-0 border-0">
+
+                <form class="row g-3" action="save/" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                        <div class="col-md-4">
+                                <label for="name" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                        placeholder="имя пользователя" value="{{ name }}" required>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please provide a valid name.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                                <label for="lastname" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastname" name="lastname"
+                                        placeholder="фамилия пользователя" value="{{ lastname }}" required>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please provide a valid lastname.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                                <label for="birthday" class="form-label">Birthday</label>
+                                <input type="text" class="form-control" id="birthday" name="birthday"
+                                        placeholder="дд-мм-гггг" pattern="^\d{2}-\d{2}-\d{4}$" value="{{ birthday }}"
+                                        required>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please provide a valid birthday.</div>
+                        </div>
+
+                        <div class="row my-3">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-4 themed-grid-col">
+                                        <label for="login" class="form-label">Login</label>
+                                        <input type="text" class="form-control" id="login" name="login"
+                                                placeholder="login" required>
+                                        <div class="valid-feedback">Looks good!</div>
+                                        <div class="invalid-feedback">Please provide a valid login.</div>
+                                </div>
+
+                                <div class="col-md-4 themed-grid-col">
+                                        <label for="login" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                                minlength="8" autocomplete="current-password" placeholder="password"
+                                                required>
+                                        <div class="valid-feedback">Looks good!</div>
+                                        <div class="invalid-feedback">Please provide a valid password.</div>
+                                </div>
+                                <div class="col-md-2"></div>
+                        </div>
+
+                        <!-- <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                        <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                        id="invalidCheck3" required>
+                                                <label class="form-check-label" for="invalidCheck3">
+                                                        Agree to terms and conditions
+                                                </label>
+                                                <div class="invalid-feedback">
+                                                        You must agree before submitting.
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="col-3"></div>
+                        </div> -->
+
+                        <div class="row my-3">
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                        <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+                                </div>
+                                <div class="col-4"></div>
+                        </div>
+
+                </form>
+        </div>
+</div>
+
+
+
+
+{# /user/save/?name=Иван&birthday=05-05-1991 #}

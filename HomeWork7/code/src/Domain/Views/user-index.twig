@@ -1,0 +1,47 @@
+<div class="bd-example-snippet bd-code-snippet">
+    <div class="bd-example m-0 border-0">
+        {% if users %}
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Фамилия</th>
+                    <th scope="col">Дата рождения</th>
+                    <th scope="col">Редактировать</th>
+                    <th scope="col">Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user.getUserId() }}</th>
+                    <td>{{ user.getUserName() }}</td>
+                    <td>{{ user.getUserLastName() }}</td>
+                    <td>{{ user.getUserBirthday() | date('d.m.Y') }}</td>
+                    <td>
+                        <form action="/user/updateuserform" method="post">
+                            <input type="hidden" name="id" value="{{ user.getUserId() }}">
+                            <button class="btn btn-light btn-sm" type="submit">Редактировать</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/user/delete" method="post">
+                            <input type="hidden" name="id" value="{{ user.getUserId() }}">
+                            <button class="btn btn-light btn-sm" type="submit"> Удалить </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="list-group container">
+            <p class="list-group-item list-group-item-action list-group-item-danger">
+                <em>Список пуст</em>
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
