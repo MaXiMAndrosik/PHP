@@ -20,7 +20,7 @@
                     <td>{{ user.getUserLastName() }}</td>
                     <td>{{ user.getUserBirthday() | date('d.m.Y') }}</td>
                     <td>
-                        <form action="/user/updateuserform" method="post">
+                        <form action="/user/updateuser" method="post">
                             <input type="hidden" name="id" value="{{ user.getUserId() }}">
                             <button class="btn btn-light btn-sm" type="submit">Редактировать</button>
                         </form>

@@ -7,8 +7,6 @@ use Geekbrains\Application1\Infrastructure\Config;
 use Geekbrains\Application1\Infrastructure\Storage;
 use Geekbrains\Application1\Infrastructure\MyLogger;
 use Geekbrains\Application1\Application\Auth;
-use Geekbrains\Application1\Controllers\UserController;
-use Geekbrains\Application1\Domain\Models\User;
 
 
 class Application
@@ -37,6 +35,7 @@ class Application
     public function run(): string
     {
         session_start();
+        Application::$auth->restoreSession();
 
         Application::$logger->getLoggerAlert($_COOKIE['PHPSESSID']);
 
@@ -62,7 +61,7 @@ class Application
 
             if (method_exists($this->controllerName, $this->methodName)) {
                 $controllerInstance = new $this->controllerName();
-                var_dump($this->methodName);
+                // var_dump($this->methodName);
 
                 if ($this->checkAccessToMethod($this->methodName)) {
                     return call_user_func_array(
@@ -72,7 +71,7 @@ class Application
                 } else {
                     header("HTTP/1.1 403 Forbidden");
                     Application::$logger->getLoggerError("Попытка доступа к методу" . $this->methodName);
-                    throw new Exception("Доступ запрещен. Ошибка 403");
+                    throw new Exception("Доступ к методу закрыт. Ошибка 403");
                 }
             } else {
                 header("HTTP/1.1 404 Not Found");

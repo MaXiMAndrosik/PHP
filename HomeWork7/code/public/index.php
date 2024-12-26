@@ -18,11 +18,3 @@ catch(Exception $e){
 // $memory_end = memory_get_usage();
 
 // echo "<h3>Потреблено " . number_format(($memory_end - $memory_start)/1024, 2, ', ', ' ') . " кб памяти</h3>";
-
-// echo password_hash('admin123', PASSWORD_BCRYPT);
-echo '<pre>';
-var_dump($_COOKIE);
-var_dump($_SESSION);
-var_dump($_POST);
-var_dump($_GET);
-

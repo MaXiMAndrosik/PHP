@@ -69,7 +69,7 @@ class UserController
                 $user->saveRightsToStorage();
                 Application::$logger->getLoggerNotice('Зарегистрирован новый пользователь '
                     . $user->getUserName() . ' ' . $user->getUserLastName());
-                Application::$auth->proceedAuth($_POST['login'], $_POST['password']);
+                UserController::actionAuth();
             } catch (PDOException $e) {
                 if ($e->getCode() == 23000) {
                     $message = 'Пользователь с таким Login уже существует! Введите другой логин. Попробуйте снова.';
@@ -118,7 +118,7 @@ class UserController
     }
     // Проверка заполнения формы аутентификации и вход в систему
     // Application::$auth->proceedAuth($_POST['login'], $_POST['password']);
-    // -> $_SESSION['user_name'] и $_SESSION['id_user']
+    // -> $_SESSION['user_name'] и $_SESSION['id_user'] и $_COOKIE['auth_token']
     public function actionAuth(): string {
 
         if (isset($_POST['login']) && isset($_POST['password']) && User::validateLoginData()) {
@@ -126,6 +126,12 @@ class UserController
         }
 
         if ($result) {
+            if($result &&
+                isset($_POST['remember']) && $_POST['remember'] == 'remember-me'){
+                $token = Application::$auth->getPasswordHash($_POST['login']);
+                User::setToken($_SESSION['id_user'], $token);
+            }
+
             header('Location: /');
         } else {
             return UserController::actionSignInForm('Неверные логин или пароль. Повторите вход в систему');
@@ -134,7 +140,9 @@ class UserController
     //-----------------------------------------------------------------------
     // ВЫХОД ИЗ СИСТЕМЫ
     public function actionSignOff(): void {
+        User::destroyToken();
         session_destroy();
+        unset($_SESSION['id_user']);
         unset($_SESSION['user_name']);
         unset($_SESSION['csrf_token']);
         header("Location: /");
@@ -142,7 +150,7 @@ class UserController
     }
     //-----------------------------------------------------------------------
     // РЕДАКТОРОВАНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ         /user/update/?id=42&name=Петр
-    // Создание формы редактирования данных пользователя
+    // Создание формы редактирования данных пользователя СТАРАЯ см. actionUpdateUser()
     public function actionUpdateUserForm() {
 
         if (!User::getUserFromStorageById($_SESSION['id_user'])) {
@@ -179,6 +187,27 @@ class UserController
                 'title' => 'Редактировать аккаунт',
                 'message' => $message,
                 'access_granted' => $access_granted,
+                'user' => $user
+            ]
+        );
+    }
+    // Создание формы редактирования данных пользователя при наличии ПРАВ 
+    public function actionUpdateUser() {
+
+        if (!Application::$auth->isAccsess() && $_POST['id'] != $_SESSION['id_user']) {
+            header("HTTP/1.1 403 Forbidden");
+            throw new \Exception("Доступ к методу запрещен. Ошибка 403");
+        }
+
+        $user = User::getUserFromStorageById($_POST['id']);
+
+
+        $render = new Render();
+        return $render->renderFormPage(
+            'user-update.twig',
+            [
+                'title' => 'Редактировать аккаунт',
+                'message' => 'Вы можете внести изменения:',
                 'user' => $user
             ]
         );

@@ -4,7 +4,7 @@ namespace Geekbrains\Application1\Domain\Models;
 
 use Geekbrains\Application1\Application\Application;
 use Geekbrains\Application1\Application\Auth;
-// use Geekbrains\Application1\Infrastructure\Storage;
+use Twig\Node\Expression\Test\NullTest;
 
 class User
 {
@@ -140,6 +140,35 @@ class User
         }
         return false;
     }
+    // Если выбрано 'Запомнить меня' устанавливаем token на COOKIE и token в БД user'у
+    public static function setToken(int $userID, string $token): void {
+        $userSql = "UPDATE users SET token = :token WHERE id_user = :id";
+
+        $handler = Application::$storage->get()->prepare($userSql);
+        $handler->execute(['id' => $userID, 'token' => $token]);
+
+        setcookie('auth_token', $token, time() + 60*60*24*30, '/');
+    }
+    // Запрос в БД о наличии token'а
+    public static function getUserToken(string $token): array {
+        $userSql = "SELECT * FROM users WHERE token = :token";
+
+        $handler = Application::$storage->get()->prepare($userSql);
+        $handler->execute(['token' => $token]);
+        $result = $handler->fetchAll();
+
+        return $result[0] ?? [];
+    }
+        // Уничтожаем БД token user'у при выходе из системы
+        public static function destroyToken(): array {
+            $userSql = "UPDATE users SET token = :token WHERE id_user = :id";
+    
+            $handler = Application::$storage->get()->prepare($userSql);
+            $handler->execute(['token' => null, 'id' => $_SESSION['id_user']]);
+            $result = $handler->fetchAll();
+    
+            return $result[0] ?? [];
+        }
     //-----------------------------------------------------------------------
     // РЕДАКТИРОВАНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
     // Сохранение (обновление) данных о пользователе

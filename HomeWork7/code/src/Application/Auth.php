@@ -2,6 +2,8 @@
 
 namespace Geekbrains\Application1\Application;
 
+use Geekbrains\Application1\Domain\Models\User;
+
 class Auth
 {
 
@@ -12,6 +14,7 @@ class Auth
         'actionSave' => ['user'],
         'actionAuth' => ['user'],
         'actionUpdateuserform' => ['admin', 'manager', 'customer'],
+        'actionUpdateuser' => ['admin', 'manager', 'customer'],
         'actionUpdate' => ['admin', 'manager', 'customer'],
         'actionSignoff' => ['admin', 'manager', 'customer'],
         'actionDeleteuserform' => ['admin', 'manager', 'customer'],
@@ -21,9 +24,10 @@ class Auth
     protected array $actionsAccess = [
         'actionIndex' => ['admin', 'manager', 'customer'],
         'actionUpdateuserform' => ['admin', 'manager'],
+        'actionUpdateuser' => ['admin', 'manager'],
         'actionUpdate' => ['admin', 'manager', 'customer'],
         'actionSignoff' => ['admin', 'manager', 'customer'],
-        // 'actionDeleteuserform' => ['admin'],
+        'actionDeleteuserform' => ['admin'],
         'actionDelete' => ['admin', 'manager', 'customer']
     ];
 
@@ -45,11 +49,25 @@ class Auth
     public function isAccsess(): bool {
         return $this->user_access;
     }
+    //-----------------------------------------------------------------------
+    // ВОССТАНАВЛЕНИЕ СЕССИИ по COOKIE
+    public function restoreSession(): void {
+        if(isset($_COOKIE['auth_token']) && !isset($_SESSION['user_name'])){
+            $userData = User::getUserToken($_COOKIE['auth_token']);
+
+            if(!empty($userData)){
+                $_SESSION['user_name'] = $userData['user_name'];
+                $_SESSION['id_user'] = $userData['id_user'];
+            }
+        }
+    }
+    //-----------------------------------------------------------------------
     // Хэширование пароля при регистрации
     public static function getPasswordHash(string $rawPassword): string {
         Application::$logger->getLoggerInfo('Запрос хеша пароля');
         return password_hash($rawPassword, PASSWORD_BCRYPT);
     }
+    //-----------------------------------------------------------------------
     // АУТЕНТИФИКАЦИЯ ПОЛЬЗОВАТЕЛЯ
     public function proceedAuth(string $login, string $password): bool {
         $sql = "SELECT id_user, user_name, user_lastname, password_hash FROM users WHERE user_login = :login";
